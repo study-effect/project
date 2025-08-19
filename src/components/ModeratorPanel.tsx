@@ -44,7 +44,7 @@ const ModeratorPanel: React.FC = () => {
   // Password change modal
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [moderatorNewPassword, setModeratorNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -173,14 +173,14 @@ const ModeratorPanel: React.FC = () => {
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!adminUser || !currentPassword || !newPassword || !confirmPassword) return;
+    if (!adminUser || !currentPassword || !moderatorNewPassword || !confirmPassword) return;
 
-    if (newPassword !== confirmPassword) {
+    if (moderatorNewPassword !== confirmPassword) {
       alert('New passwords do not match');
       return;
     }
 
-    if (newPassword.length < 6) {
+    if (moderatorNewPassword.length < 6) {
       alert('New password must be at least 6 characters long');
       return;
     }
@@ -190,7 +190,7 @@ const ModeratorPanel: React.FC = () => {
       const { data, error } = await supabase.rpc('change_admin_password', {
         admin_id: adminUser.id,
         old_password: currentPassword,
-        new_password: newPassword
+        new_password: moderatorNewPassword
       });
 
       if (error) throw error;
@@ -199,7 +199,7 @@ const ModeratorPanel: React.FC = () => {
         alert('Password changed successfully!');
         setShowPasswordModal(false);
         setCurrentPassword('');
-        setNewPassword('');
+        setModeratorNewPassword('');
         setConfirmPassword('');
       } else {
         alert(data.error || 'Failed to change password');
@@ -627,8 +627,8 @@ const ModeratorPanel: React.FC = () => {
                     <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                     <input
                       type={showNewPassword ? 'text' : 'password'}
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
+                      value={moderatorNewPassword}
+                      onChange={(e) => setModeratorNewPassword(e.target.value)}
                       className={`w-full pl-10 pr-10 py-3 ${isDarkMode ? 'bg-gray-700 border-gray-600 text-gray-200 placeholder-gray-400' : 'bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500'} border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                       placeholder="Enter new password"
                       required

@@ -325,7 +325,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ adminUser }) => {
               className={`p-4 rounded-lg border ${isDarkMode ? 'border-gray-600 hover:border-green-500' : 'border-gray-200 hover:border-green-300'} transition-colors cursor-pointer`}
             >
               <MessageSquare className={`w-16 h-16 ${isDarkMode ? 'text-gray-600' : 'text-gray-300'} mx-auto mb-4`} />
-                <Users className="w-6 h-6 text-green-600" />
+              <p className={`text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                No complaints or messages yet. Click to manage users.
+              </p>
+                <h3 className={`font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>User Management</h3>
+                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Manage user accounts</p>
+              </div>
             </div>
           )}
         </div>
@@ -352,7 +357,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ adminUser }) => {
               <MessageSquare className="w-6 h-6 text-green-600" />
                   <h3 className={`font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>User Management</h3>
                   <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Manage user accounts</p>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Reply to multiple messages</p>
               </div>
             </div>
           </div>
