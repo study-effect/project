@@ -51,11 +51,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         .from('user_preferences')
         .select('dark_mode')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (data) {
         setIsDarkMode(data.dark_mode);
-      } else if (error && error.code === 'PGRST116') {
+      } else if (!data) {
         // Create default preferences with dark mode
         setIsDarkMode(true);
         await supabase

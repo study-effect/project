@@ -68,34 +68,70 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const loadFriends = async () => {
     if (!user) return;
 
-    const { data: friendsData, error } = await supabase.rpc('get_user_friends', {
-      target_user_id: user.id
-    });
+    // Get friends with user details using joins
+    const { data: friendsData, error } = await supabase
+      .from('friends')
+      .select(`
+        id,
+        user_id,
+        friend_id,
+        created_at,
+        friend_user:users!friends_friend_id_fkey(id, name, email)
+      `)
+      .eq('user_id', user.id);
 
     if (error) {
       console.error('Error loading friends:', error);
       return;
     }
 
-    setFriends(friendsData || []);
+    // Transform the data to match the Friend interface
+    const transformedFriends = friendsData?.map(f => ({
+      id: f.id,
+      user_id: f.user_id,
+      friend_id: f.friend_id,
+      friend_name: f.friend_user?.name || 'Unknown',
+      friend_email: f.friend_user?.email || '',
+      created_at: f.created_at
+    })) || [];
+
+    setFriends(transformedFriends);
   };
 
   const loadFriendRequests = async () => {
     if (!user) return;
 
-    const { data: requestsData, error } = await supabase.rpc('get_user_friend_requests', {
-      target_user_id: user.id
-    });
+    // Get friend requests with sender details using joins
+    const { data: requestsData, error } = await supabase
+      .from('friend_requests')
+      .select(`
+        id,
+        sender_id,
+        receiver_id,
+        status,
+        created_at,
+        sender_user:users!friend_requests_sender_id_fkey(id, name, email)
+      `)
+      .eq('receiver_id', user.id)
+      .eq('status', 'pending');
 
     if (error) {
       console.error('Error loading friend requests:', error);
       return;
     }
 
-    setFriendRequests(requestsData?.map(r => ({
-      ...r,
-      status: r.status as 'pending' | 'accepted' | 'rejected'
+    // Transform the data to match the FriendRequest interface
+    const transformedRequests = requestsData?.map(r => ({
+      id: r.id,
+      sender_id: r.sender_id,
+      receiver_id: r.receiver_id,
+      sender_name: r.sender_user?.name || 'Unknown',
+      sender_email: r.sender_user?.email || '',
+      status: r.status as 'pending' | 'accepted' | 'rejected',
+      created_at: r.created_at
     })) || []);
+
+    setFriendRequests(transformedRequests);
   };
 
   const loadStudySessions = async () => {
