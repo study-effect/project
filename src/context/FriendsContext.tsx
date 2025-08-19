@@ -129,7 +129,7 @@ export const FriendsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       sender_email: r.sender_user?.email || '',
       status: r.status as 'pending' | 'accepted' | 'rejected',
       created_at: r.created_at
-    })) || []);
+    })) || [];
 
     setFriendRequests(transformedRequests);
   };
